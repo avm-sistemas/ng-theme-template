@@ -1,3 +1,6 @@
+[![Docker Image CI](https://github.com/avm-sistemas/ng-theme-template/actions/workflows/docker-image.yml/badge.svg)](https://github.com/avm-sistemas/ng-theme-template/actions/workflows/docker-image.yml)
+
+
 # ng-theme-template
 
 Template Angular 20 com sistema de autenticação e gerência de temas por usuário.
