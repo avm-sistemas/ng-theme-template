@@ -1,0 +1,64 @@
+<div class="theme-picker" [class.open]="isOpen()">
+  <button
+    class="theme-toggle-btn"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen()"
+    aria-label="Abrir seletor de tema"
+    title="Personalizar tema"
+  >
+    <span class="palette-icon">🎨</span>
+    <span class="theme-name">{{ themeService.currentTheme().name }}</span>
+    <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  @if (isOpen()) {
+    <div class="picker-panel" role="dialog" aria-label="Seletor de tema">
+      <div class="panel-header">
+        <span class="panel-title">Aparência</span>
+        <button class="close-btn" (click)="close()" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="mode-toggle-row">
+        <span class="row-label">Modo</span>
+        <button
+          class="mode-toggle"
+          [class.dark-active]="themeService.isDark()"
+          (click)="toggleMode()"
+          [attr.aria-pressed]="themeService.isDark()"
+          aria-label="Alternar modo claro/escuro"
+        >
+          <span class="mode-option" [class.active]="!themeService.isDark()">☀️ Claro</span>
+          <span class="mode-option" [class.active]="themeService.isDark()">🌙 Escuro</span>
+        </button>
+      </div>
+
+      <div class="themes-grid">
+        <span class="row-label">Tema</span>
+        <div class="themes-list">
+          @for (theme of themes; track theme.id) {
+            <button
+              class="theme-card"
+              [class.selected]="themeService.themeId() === theme.id"
+              (click)="selectTheme(theme.id)"
+              [attr.aria-pressed]="themeService.themeId() === theme.id"
+              [attr.aria-label]="'Tema ' + theme.name + ': ' + theme.description"
+            >
+              <span class="theme-icon">{{ theme.icon }}</span>
+              <div class="theme-swatches">
+                @for (color of getThemePreviewColors(theme); track $index) {
+                  <span class="swatch" [style.background]="color"></span>
+                }
+              </div>
+              <span class="theme-label">{{ theme.name }}</span>
+              @if (themeService.themeId() === theme.id) {
+                <span class="selected-mark" aria-hidden="true">✓</span>
+              }
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

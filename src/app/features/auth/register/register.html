@@ -1,0 +1,87 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-logo">◈</span>
+      <h1 class="auth-title">Criar conta</h1>
+      <p class="auth-subtitle">Comece agora, é gratuito</p>
+    </div>
+
+    @if (error()) {
+      <div class="alert alert-error" role="alert">{{ error() }}</div>
+    }
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="field-label" for="name">Nome</label>
+        <input
+          id="name"
+          type="text"
+          class="field-input"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="Seu nome"
+          autocomplete="name"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="email">E-mail</label>
+        <input
+          id="email"
+          type="email"
+          class="field-input"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="seu@email.com"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="password">Senha</label>
+        <div class="input-group">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="field-input"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Mín. 6 caracteres"
+            autocomplete="new-password"
+            required
+          />
+          <button
+            type="button"
+            class="input-addon"
+            (click)="showPassword.set(!showPassword())"
+          >{{ showPassword() ? '🙈' : '👁' }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="confirmPassword">Confirmar senha</label>
+        <input
+          id="confirmPassword"
+          [type]="showPassword() ? 'text' : 'password'"
+          class="field-input"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          placeholder="Repita a senha"
+          autocomplete="new-password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        @if (loading()) { <span class="spinner"></span> Criando conta… }
+        @else { Criar conta }
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Já tem conta? <a routerLink="/auth/login">Entrar</a>
+    </p>
+  </div>
+</div>
