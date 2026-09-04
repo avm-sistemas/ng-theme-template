@@ -1,0 +1,66 @@
+<div class="dashboard">
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Olá, {{ authService.user()?.name }} 👋</h1>
+      <p class="page-subtitle">Aqui está um resumo do seu painel</p>
+    </div>
+  </header>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-icon">📋</span>
+      <span class="stat-value">24</span>
+      <span class="stat-label">Tarefas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✅</span>
+      <span class="stat-value">18</span>
+      <span class="stat-label">Concluídas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⏳</span>
+      <span class="stat-value">6</span>
+      <span class="stat-label">Em andamento</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🎨</span>
+      <span class="stat-value">{{ themeService.currentTheme().name }}</span>
+      <span class="stat-label">Tema ativo</span>
+    </div>
+  </div>
+
+  <div class="cards-row">
+    <div class="content-card">
+      <h2 class="card-title">Atividade recente</h2>
+      <div class="activity-list">
+        <div class="activity-item">
+          <span class="activity-dot"></span>
+          <span>Template criado com sucesso</span>
+          <time>agora</time>
+        </div>
+        <div class="activity-item">
+          <span class="activity-dot"></span>
+          <span>Tema configurado: {{ themeService.currentTheme().name }}</span>
+          <time>1 min atrás</time>
+        </div>
+        <div class="activity-item">
+          <span class="activity-dot"></span>
+          <span>Login realizado</span>
+          <time>2 min atrás</time>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h2 class="card-title">Temas disponíveis</h2>
+      <div class="themes-preview">
+        @for (theme of themeService.themes; track theme.id) {
+          <span class="theme-badge" [class.active]="themeService.themeId() === theme.id">
+            {{ theme.icon }} {{ theme.name }}
+          </span>
+        }
+      </div>
+      <p class="hint-text">Use o seletor de tema no topo para personalizar a aparência.</p>
+    </div>
+  </div>
+</div>

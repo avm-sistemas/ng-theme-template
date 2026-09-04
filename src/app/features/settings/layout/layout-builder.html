@@ -1,0 +1,220 @@
+<div class="builder-page">
+
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Layout</h1>
+      <p class="page-subtitle">Monte a estrutura da sua interface</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" (click)="reset()">Descartar</button>
+      <button class="btn-primary" (click)="save()">
+        @if (saved()) { ✓ Aplicado } @else { Aplicar layout }
+      </button>
+    </div>
+  </header>
+
+  <!-- Presets row -->
+  <section class="section-card">
+    <h2 class="section-title">Ponto de partida</h2>
+    <p class="section-desc">Escolha um preset e depois ajuste as regiões abaixo.</p>
+    <div class="presets-grid">
+      @for (preset of ls.presets; track preset.id) {
+        <button
+          class="preset-card"
+          [class.active]="ls.presetId() === preset.id"
+          (click)="applyPreset(preset.id)"
+        >
+          <span class="preset-icon">{{ preset.icon }}</span>
+          <span class="preset-name">{{ preset.name }}</span>
+          <span class="preset-desc">{{ preset.description }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Live preview -->
+  <section class="section-card preview-section">
+    <h2 class="section-title">Preview</h2>
+    <p class="section-desc">Representação esquemática do layout atual (draft não salvo).</p>
+    <div class="shell-preview">
+      @if (draft().topbar.visible) {
+        <div class="prev-topbar" [style.height.px]="draft().topbar.height / 2">
+          <span class="prev-label">Topbar · {{ draft().topbar.behavior }}</span>
+          <div class="prev-widgets">
+            @for (w of draft().topbar.widgets; track w.id + w.position) {
+              <span class="prev-chip" [class]="w.position">{{ w.id }}</span>
+            }
+          </div>
+        </div>
+      }
+      <div class="prev-body">
+        @if (draft().sidebar.visible) {
+          <div class="prev-sidebar" [style.width.px]="draft().sidebar.width / 3">
+            <span class="prev-label rot">Sidebar</span>
+          </div>
+        }
+        <div class="prev-main"><span class="prev-label">Conteúdo</span></div>
+      </div>
+      @if (draft().bottombar.visible) {
+        <div class="prev-bottombar" [style.height.px]="draft().bottombar.height / 2">
+          <span class="prev-label">Bottombar</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Topbar region -->
+  <section class="section-card">
+    <div class="region-header">
+      <div>
+        <h2 class="section-title">Topbar</h2>
+        <p class="section-desc">Barra horizontal no topo</p>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [checked]="draft().topbar.visible" (change)="toggleRegion('topbar')" />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
+
+    @if (draft().topbar.visible) {
+      <div class="region-options">
+        <div class="option-row">
+          <span class="option-label">Comportamento</span>
+          <div class="pill-group">
+            @for (b of topbarBehaviors; track b.v) {
+              <button class="pill" [class.active]="draft().topbar.behavior === b.v"
+                      (click)="setTopbarBehavior(b.v)">{{ b.l }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="widgets-grid">
+          @for (pos of positions; track pos) {
+            <div class="widget-slot">
+              <h3 class="slot-title">{{ positionLabel[pos] }}</h3>
+              <div class="widget-list">
+                @for (w of availableWidgets; track w.id) {
+                  <label class="widget-chip" [class.on]="hasWidget('topbar', w.id, pos)">
+                    <input type="checkbox"
+                           [checked]="hasWidget('topbar', w.id, pos)"
+                           (change)="hasWidget('topbar', w.id, pos)
+                             ? removeWidget('topbar', w.id, pos)
+                             : addWidget('topbar', w.id, pos)" />
+                    <span>{{ w.icon }} {{ w.label }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Sidebar region -->
+  <section class="section-card">
+    <div class="region-header">
+      <div>
+        <h2 class="section-title">Sidebar</h2>
+        <p class="section-desc">Menu lateral</p>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [checked]="draft().sidebar.visible" (change)="toggleRegion('sidebar')" />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
+
+    @if (draft().sidebar.visible) {
+      <div class="region-options">
+        <div class="option-row">
+          <span class="option-label">Comportamento</span>
+          <div class="pill-group">
+            @for (b of sidebarBehaviors; track b.v) {
+              <button class="pill" [class.active]="draft().sidebar.behavior === b.v"
+                      (click)="setSidebarBehavior(b.v)">{{ b.l }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="option-row">
+          <span class="option-label">Posição</span>
+          <div class="pill-group">
+            <button class="pill" [class.active]="draft().sidebar.side === 'left'"  (click)="setSidebarSide('left')">Esquerda</button>
+            <button class="pill" [class.active]="draft().sidebar.side === 'right'" (click)="setSidebarSide('right')">Direita</button>
+          </div>
+        </div>
+
+        <div class="widgets-grid single">
+          <div class="widget-slot">
+            <h3 class="slot-title">Widgets</h3>
+            <div class="widget-list">
+              @for (w of availableWidgets; track w.id) {
+                <label class="widget-chip" [class.on]="hasWidget('sidebar', w.id, 'start')">
+                  <input type="checkbox"
+                         [checked]="hasWidget('sidebar', w.id, 'start')"
+                         (change)="hasWidget('sidebar', w.id, 'start')
+                           ? removeWidget('sidebar', w.id, 'start')
+                           : addWidget('sidebar', w.id, 'start')" />
+                  <span>{{ w.icon }} {{ w.label }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Bottombar region -->
+  <section class="section-card">
+    <div class="region-header">
+      <div>
+        <h2 class="section-title">Bottombar</h2>
+        <p class="section-desc">Barra inferior — ótima para mobile</p>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [checked]="draft().bottombar.visible" (change)="toggleRegion('bottombar')" />
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
+
+    @if (draft().bottombar.visible) {
+      <div class="region-options">
+        <div class="option-row">
+          <span class="option-label">Comportamento</span>
+          <div class="pill-group">
+            @for (b of bottombarBehaviors; track b.v) {
+              <button class="pill" [class.active]="draft().bottombar.behavior === b.v"
+                      (click)="setBottombarBehavior(b.v)">{{ b.l }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="widgets-grid">
+          @for (pos of positions; track pos) {
+            <div class="widget-slot">
+              <h3 class="slot-title">{{ positionLabel[pos] }}</h3>
+              <div class="widget-list">
+                @for (w of availableWidgets; track w.id) {
+                  <label class="widget-chip" [class.on]="hasWidget('bottombar', w.id, pos)">
+                    <input type="checkbox"
+                           [checked]="hasWidget('bottombar', w.id, pos)"
+                           (change)="hasWidget('bottombar', w.id, pos)
+                             ? removeWidget('bottombar', w.id, pos)
+                             : addWidget('bottombar', w.id, pos)" />
+                    <span>{{ w.icon }} {{ w.label }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </section>
+
+  <div class="danger-zone">
+    <button class="btn-danger" (click)="resetToDefault()">Restaurar padrão</button>
+  </div>
+
+</div>

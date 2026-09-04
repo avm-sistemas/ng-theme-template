@@ -1,0 +1,69 @@
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg, #f8fafc);
+  color: var(--color-text, #0f172a);
+  line-height: 1.6;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* ── Default CSS custom properties (overridden by ThemeService) ── */
+:root {
+  --color-primary:       #475569;
+  --color-primary-light: #64748b;
+  --color-primary-dark:  #334155;
+  --color-secondary:     #94a3b8;
+  --color-accent:        #3b82f6;
+  --color-bg:            #f8fafc;
+  --color-surface:       #ffffff;
+  --color-surface-alt:   #f1f5f9;
+  --color-text:          #0f172a;
+  --color-text-muted:    #64748b;
+  --color-border:        #e2e8f0;
+  --color-error:         #ef4444;
+  --color-success:       #22c55e;
+  --color-warning:       #f59e0b;
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+a { color: var(--color-primary); }
+
+input, button, textarea, select { font: inherit; }
+
+button { cursor: pointer; }
+
+/* ── View transitions ── */
+@keyframes fade-in  { from { opacity: 0; transform: translateY(4px); } }
+@keyframes fade-out { to   { opacity: 0; transform: translateY(-4px); } }
+
+::view-transition-old(root) { animation: 120ms ease-out fade-out; }
+::view-transition-new(root) { animation: 150ms ease-in  fade-in;  }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 99px;
+}
+
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

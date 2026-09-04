@@ -1,0 +1,62 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-logo">◈</span>
+      <h1 class="auth-title">Entrar</h1>
+      <p class="auth-subtitle">Bem-vindo de volta</p>
+    </div>
+
+    @if (error()) {
+      <div class="alert alert-error" role="alert">{{ error() }}</div>
+    }
+
+    <form class="auth-form" (ngSubmit)="submit()" #f="ngForm">
+      <div class="field">
+        <label class="field-label" for="email">E-mail</label>
+        <input
+          id="email"
+          type="email"
+          class="field-input"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="seu@email.com"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="password">Senha</label>
+        <div class="input-group">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="field-input"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+          <button
+            type="button"
+            class="input-addon"
+            (click)="showPassword.set(!showPassword())"
+            [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+          >
+            {{ showPassword() ? '🙈' : '👁' }}
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        @if (loading()) { <span class="spinner"></span> Entrando… }
+        @else { Entrar }
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Não tem conta? <a routerLink="/auth/register">Criar conta</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<section class="settings-section">
+  <header class="section-header">
+    <h2>Modo de exibição</h2>
+    <p>Escolha entre tema claro e escuro</p>
+  </header>
+
+  <div class="mode-cards">
+    <button
+      class="mode-card"
+      [class.selected]="!themeService.isDark()"
+      (click)="setMode('light')"
+    >
+      <div class="mode-preview light-preview">
+        <div class="preview-bar"></div>
+        <div class="preview-content">
+          <div class="preview-line long"></div>
+          <div class="preview-line short"></div>
+        </div>
+      </div>
+      <span class="mode-label">☀️ Claro</span>
+      @if (!themeService.isDark()) { <span class="mode-check">✓</span> }
+    </button>
+
+    <button
+      class="mode-card"
+      [class.selected]="themeService.isDark()"
+      (click)="setMode('dark')"
+    >
+      <div class="mode-preview dark-preview">
+        <div class="preview-bar"></div>
+        <div class="preview-content">
+          <div class="preview-line long"></div>
+          <div class="preview-line short"></div>
+        </div>
+      </div>
+      <span class="mode-label">🌙 Escuro</span>
+      @if (themeService.isDark()) { <span class="mode-check">✓</span> }
+    </button>
+  </div>
+</section>
+
+<section class="settings-section">
+  <header class="section-header">
+    <h2>Paleta de cores</h2>
+    <p>Escolha a identidade visual da sua experiência</p>
+  </header>
+
+  <div class="themes-full-grid">
+    @for (theme of themeService.themes; track theme.id) {
+      <button
+        class="theme-full-card"
+        [class.selected]="themeService.themeId() === theme.id"
+        (click)="selectTheme(theme.id)"
+      >
+        <div class="theme-color-band">
+          @for (key of ['primary', 'accent', 'background', 'surface', 'primaryDark']; track key) {
+            <span
+              class="color-band-strip"
+              [style.background]="getColor(theme, key, themeService.isDark())"
+            ></span>
+          }
+        </div>
+        <div class="theme-info">
+          <span class="theme-full-icon">{{ theme.icon }}</span>
+          <div>
+            <span class="theme-full-name">{{ theme.name }}</span>
+            <span class="theme-full-desc">{{ theme.description }}</span>
+          </div>
+          @if (themeService.themeId() === theme.id) {
+            <span class="theme-full-check">✓</span>
+          }
+        </div>
+      </button>
+    }
+  </div>
+</section>
